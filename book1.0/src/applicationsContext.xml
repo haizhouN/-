@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!DOCTYPE beans [
+        <!ELEMENT beans (bean*)>
+        <!ELEMENT bean (property*)>
+        <!ELEMENT property (#PCDATA)>
+        <!ATTLIST bean id ID #REQUIRED>
+        <!ATTLIST bean class CDATA #IMPLIED>
+        <!ATTLIST property name CDATA #IMPLIED>
+        <!ATTLIST property ref IDREF #IMPLIED>
+        ]>
+
+<beans>
+    <!--这个bean标签的作用是，将来servletspath中涉及的名字对应的是fruit，那么就要FruitController这个类来处理-->
+
+
+    <bean id="page" class="myssm.myspringmvc.PageController"/>
+
+
+    <!--DAO-->
+    <bean id="userDAO" class="book.pojo.dao.impl.UserImpl"/>
+    <bean id="bookDAO" class="book.pojo.dao.impl.BookDAOImpl"/>
+    <bean id="cartItemDAO" class="book.pojo.dao.impl.CartItemDAOImpl"/>
+    <bean id="orderDAO" class="book.pojo.dao.impl.OrderDAOImpl"/>
+    <bean id="orderItemDAO" class="book.pojo.dao.impl.OrderItemDAOImpl"/>
+
+    <!-- service-->
+    <bean id="userService" class="book.pojo.service.Impl.UserServiceImpl">
+        <property name="userDAO" ref="userDAO"/>
+    </bean>
+    <bean id="bookService" class="book.pojo.service.Impl.BookServiceImpl">
+        <property name="bookDAO" ref="bookDAO"/>
+    </bean>
+    <bean id="cartItemService" class="book.pojo.service.Impl.CartItemServiceImpl">
+        <property name="cartItemDAO" ref="cartItemDAO"/>
+        <property name="bookService" ref="bookService"/>
+    </bean>
+    <bean id="orderService" class="book.pojo.service.Impl.OrderServiceImpl">
+        <property name="orderDAO" ref="orderDAO"/>
+        <property name="orderItemDAO" ref="orderItemDAO"/>
+        <property name="cartItemDAO" ref="cartItemDAO"/>
+    </bean>
+
+
+    <!--controller-->
+    <bean id="user" class="book.pojo.controller.UserController">
+        <property name="userService" ref="userService"/>
+        <property name="cartItemService" ref="cartItemService"/>
+    </bean>
+    <bean id="book" class="book.pojo.controller.BookController">
+        <property name="bookService" ref="bookService"/>
+    </bean>
+    <bean id="cart" class="book.pojo.controller.CartController">
+        <property name="cartItemService" ref="cartItemService"/>
+    </bean>
+    <bean id="order" class="book.pojo.controller.OrderController">
+        <property name="orderService" ref="orderService"/>
+    </bean>
+
+</beans>
